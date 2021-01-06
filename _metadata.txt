@@ -1,0 +1,17 @@
+generated-with: Easy Java/Javascript Simulations, version 6.01, build 201013. Visit http://www.um.es/fem/Ejs
+title: Ondas transversal e logitudinal
+logo-image: 
+author: Humberto Carmona
+copyright: 
+preferred-width: 800
+preferred-height: 600
+author-image: HAC_logo.png
+source: ondas_molas_v3.ejss
+main-script: 
+main-simulation: ondas_molas_v3_Simulation.xhtml
+available-languages: 
+html-contents: ondas_molas_v3_Contents.xhtml
+html-main: ondas_molas_v3.xhtml
+page-title: Ondas transversal e logitudinal
+page-index: ondas_molas_v3_Simulation.xhtml
+resource: HAC_logo.png

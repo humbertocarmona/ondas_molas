@@ -1,0 +1,1286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <meta charset="utf-8" />
+    <title>Ondas transversal e logitudinal</title>
+    <link rel="stylesheet"  type="text/css" href="library/css/ejss.css" />
+    <script src="library/scripts/common_script.js"></script>
+    <script src="library/scripts/textresizedetector.js"></script>
+    <script src="library/ejsS.v1.min.js"></script>
+<script type="text/javascript"><!--//--><![CDATA[//><!--
+/* _inputParameters: an object with different values for the model parameters */
+function ondas_molas_v3(_topFrame,_libraryPath,_codebasePath, _inputParameters) {
+  var _model = EJSS_CORE.createAnimationLMS();
+  var _view;
+  var _isPlaying = false;
+  var _isPaused = true;
+  var _isMobile = (navigator===undefined) ? false : navigator.userAgent.match(/iPhone|iPad|iPod|Android|BlackBerry|Opera Mini|IEMobile/i);
+
+var _stringProperties = {};
+  var _tools = {
+    showInputDialog : EJSS_INTERFACE.BoxPanel.showInputDialog,
+    showOkDialog : EJSS_INTERFACE.BoxPanel.showOkDialog,
+    showOkCancelDialog : EJSS_INTERFACE.BoxPanel.showOkCancelDialog,
+    downloadText: EJSS_TOOLS.File.downloadText,
+    uploadText: function(action) { EJSS_TOOLS.File.uploadText(_model,action); } 
+  };
+
+  function _play()  { _isPaused = false; _isPlaying = true;  _model.play();  }
+  function _pause() { _isPaused = true;  _isPlaying = false; _model.pause(); }
+  function _step()  { _pause();  _model.step(); }
+  function _reset() { _model.reset();  _isPaused = _model.isPaused(); _isPlaying = _model.isPlaying(); }
+  _model._play  = _play;
+  _model._pause = _pause;
+  _model._step  = _step;
+  _model._reset = _reset;
+  function _update() { _model.update(); }
+  function _initialize() { _model.initialize(); }
+  function _setFPS(_fps) { _model.setFPS(_fps); }
+  function _setDelay(_delay) { _model.setDelay(_delay); }
+  function _setStepsPerDisplay(_spd) { _model.setStepsPerDisplay(_spd); }
+  function _setUpdateView(_updateView) { _model.setUpdateView(_updateView); }
+  function _setAutoplay(_auto) { _model.setAutoplay(_auto); }
+  function _println(_message) { console.log(_message); }
+
+  function _breakAfterThisPage() { _model.setShouldBreak(true); }
+
+  function _resetSolvers() { if (_model.resetSolvers) _model.resetSolvers(); }
+
+  function _saveText(name,type,content) { if (_model.saveText) _model.saveText(name,type,content); }
+
+  function _saveState(name) { if (_model.saveState) _model.saveState(name); }
+
+  function _saveImage(name,panelname) { if (_model.saveImage) _model.saveImage(name,panelname); }
+
+  function _readState(url,type) { if (_model.readState) _model.readState(url,type); }
+
+  function _readText(url,type,varname) { if (_model.readText) _model.readText(url,type,varname); }
+
+  function _getStringProperty(propertyName) {
+    var _value = _stringProperties[propertyName];
+    if (_value===undefined) return propertyName;
+    else return _value;
+  }
+  var __pagesEnabled = [];
+  function _setPageEnabled(pageName,enabled) { __pagesEnabled[pageName] = enabled; }
+
+  var n; // EjsS Model.Variables.aux.n
+  var l0; // EjsS Model.Variables.aux.l0
+  var xmin; // EjsS Model.Variables.aux.xmin
+  var xmax; // EjsS Model.Variables.aux.xmax
+  var k; // EjsS Model.Variables.aux.k
+  var b; // EjsS Model.Variables.aux.b
+  var amp; // EjsS Model.Variables.aux.amp
+  var ymin; // EjsS Model.Variables.aux.ymin
+  var ymax; // EjsS Model.Variables.aux.ymax
+  var dt; // EjsS Model.Variables.aux.dt
+  var tol; // EjsS Model.Variables.aux.tol
+  var t; // EjsS Model.Variables.aux.t
+  var tmax; // EjsS Model.Variables.aux.tmax
+  var index; // EjsS Model.Variables.aux.index
+  var xfixed; // EjsS Model.Variables.aux.xfixed
+  var yfixed; // EjsS Model.Variables.aux.yfixed
+  var sim; // EjsS Model.Variables.aux.sim
+  var fixedend; // EjsS Model.Variables.aux.fixedend
+  var inf; // EjsS Model.Variables.aux.inf
+  var ninf; // EjsS Model.Variables.aux.ninf
+  var nold; // EjsS Model.Variables.aux.nold
+  var measure; // EjsS Model.Variables.aux.measure
+  var pulse; // EjsS Model.Variables.aux.pulse
+  var sendal; // EjsS Model.Variables.aux.sendal
+  var inty0; // EjsS Model.Variables.aux.inty0
+  var fStr; // EjsS Model.Variables.aux.fStr
+
+  var x; // EjsS Model.Variables.osciladores.x
+  var dx; // EjsS Model.Variables.osciladores.dx
+  var vx; // EjsS Model.Variables.osciladores.vx
+  var ax; // EjsS Model.Variables.osciladores.ax
+  var y; // EjsS Model.Variables.osciladores.y
+  var dy; // EjsS Model.Variables.osciladores.dy
+  var vy; // EjsS Model.Variables.osciladores.vy
+  var ay; // EjsS Model.Variables.osciladores.ay
+  var l; // EjsS Model.Variables.osciladores.l
+  var kin; // EjsS Model.Variables.osciladores.kin
+
+  var _privateOdesList;
+  var _ODEi_evolution1;
+  var userEvents1=[];
+
+  _model.getOdes = function() { return [_ODEi_evolution1]; };
+
+  _model.removeEvents = function(){
+    userEvents1=[];
+  };
+
+  function _serialize() { return _model.serialize(); }
+
+  _model._userSerialize = function() {
+    return {
+      n : n,
+      l0 : l0,
+      xmin : xmin,
+      xmax : xmax,
+      k : k,
+      b : b,
+      amp : amp,
+      ymin : ymin,
+      ymax : ymax,
+      dt : dt,
+      tol : tol,
+      t : t,
+      tmax : tmax,
+      index : index,
+      xfixed : xfixed,
+      yfixed : yfixed,
+      sim : sim,
+      fixedend : fixedend,
+      inf : inf,
+      ninf : ninf,
+      nold : nold,
+      measure : measure,
+      pulse : pulse,
+      sendal : sendal,
+      inty0 : inty0,
+      fStr : fStr,
+      x : x,
+      dx : dx,
+      vx : vx,
+      ax : ax,
+      y : y,
+      dy : dy,
+      vy : vy,
+      ay : ay,
+      l : l,
+      kin : kin
+    };
+  };
+
+  function _serializePublic() { return _model.serializePublic(); }
+
+  _model._userSerializePublic = function() {
+    return {
+      n : n,
+      l0 : l0,
+      xmin : xmin,
+      xmax : xmax,
+      k : k,
+      b : b,
+      amp : amp,
+      ymin : ymin,
+      ymax : ymax,
+      dt : dt,
+      tol : tol,
+      t : t,
+      tmax : tmax,
+      index : index,
+      xfixed : xfixed,
+      yfixed : yfixed,
+      sim : sim,
+      fixedend : fixedend,
+      inf : inf,
+      ninf : ninf,
+      nold : nold,
+      measure : measure,
+      pulse : pulse,
+      sendal : sendal,
+      inty0 : inty0,
+      fStr : fStr,
+      x : x,
+      dx : dx,
+      vx : vx,
+      ax : ax,
+      y : y,
+      dy : dy,
+      vy : vy,
+      ay : ay,
+      l : l,
+      kin : kin
+    };
+  };
+
+  _model._readParameters = function(json) {
+    if(typeof json.n != "undefined") n = json.n;
+    if(typeof json.l0 != "undefined") l0 = json.l0;
+    if(typeof json.xmin != "undefined") xmin = json.xmin;
+    if(typeof json.xmax != "undefined") xmax = json.xmax;
+    if(typeof json.k != "undefined") k = json.k;
+    if(typeof json.b != "undefined") b = json.b;
+    if(typeof json.amp != "undefined") amp = json.amp;
+    if(typeof json.ymin != "undefined") ymin = json.ymin;
+    if(typeof json.ymax != "undefined") ymax = json.ymax;
+    if(typeof json.dt != "undefined") dt = json.dt;
+    if(typeof json.tol != "undefined") tol = json.tol;
+    if(typeof json.t != "undefined") t = json.t;
+    if(typeof json.tmax != "undefined") tmax = json.tmax;
+    if(typeof json.index != "undefined") index = json.index;
+    if(typeof json.xfixed != "undefined") xfixed = json.xfixed;
+    if(typeof json.yfixed != "undefined") yfixed = json.yfixed;
+    if(typeof json.sim != "undefined") sim = json.sim;
+    if(typeof json.fixedend != "undefined") fixedend = json.fixedend;
+    if(typeof json.inf != "undefined") inf = json.inf;
+    if(typeof json.ninf != "undefined") ninf = json.ninf;
+    if(typeof json.nold != "undefined") nold = json.nold;
+    if(typeof json.measure != "undefined") measure = json.measure;
+    if(typeof json.pulse != "undefined") pulse = json.pulse;
+    if(typeof json.sendal != "undefined") sendal = json.sendal;
+    if(typeof json.inty0 != "undefined") inty0 = json.inty0;
+    if(typeof json.fStr != "undefined") fStr = json.fStr;
+    if(typeof json.x != "undefined") x = json.x;
+    if(typeof json.dx != "undefined") dx = json.dx;
+    if(typeof json.vx != "undefined") vx = json.vx;
+    if(typeof json.ax != "undefined") ax = json.ax;
+    if(typeof json.y != "undefined") y = json.y;
+    if(typeof json.dy != "undefined") dy = json.dy;
+    if(typeof json.vy != "undefined") vy = json.vy;
+    if(typeof json.ay != "undefined") ay = json.ay;
+    if(typeof json.l != "undefined") l = json.l;
+    if(typeof json.kin != "undefined") kin = json.kin;
+  };
+
+  _model._readParametersPublic = function(json) {
+    if(typeof json.n != "undefined") n = json.n;
+    if(typeof json.l0 != "undefined") l0 = json.l0;
+    if(typeof json.xmin != "undefined") xmin = json.xmin;
+    if(typeof json.xmax != "undefined") xmax = json.xmax;
+    if(typeof json.k != "undefined") k = json.k;
+    if(typeof json.b != "undefined") b = json.b;
+    if(typeof json.amp != "undefined") amp = json.amp;
+    if(typeof json.ymin != "undefined") ymin = json.ymin;
+    if(typeof json.ymax != "undefined") ymax = json.ymax;
+    if(typeof json.dt != "undefined") dt = json.dt;
+    if(typeof json.tol != "undefined") tol = json.tol;
+    if(typeof json.t != "undefined") t = json.t;
+    if(typeof json.tmax != "undefined") tmax = json.tmax;
+    if(typeof json.index != "undefined") index = json.index;
+    if(typeof json.xfixed != "undefined") xfixed = json.xfixed;
+    if(typeof json.yfixed != "undefined") yfixed = json.yfixed;
+    if(typeof json.sim != "undefined") sim = json.sim;
+    if(typeof json.fixedend != "undefined") fixedend = json.fixedend;
+    if(typeof json.inf != "undefined") inf = json.inf;
+    if(typeof json.ninf != "undefined") ninf = json.ninf;
+    if(typeof json.nold != "undefined") nold = json.nold;
+    if(typeof json.measure != "undefined") measure = json.measure;
+    if(typeof json.pulse != "undefined") pulse = json.pulse;
+    if(typeof json.sendal != "undefined") sendal = json.sendal;
+    if(typeof json.inty0 != "undefined") inty0 = json.inty0;
+    if(typeof json.fStr != "undefined") fStr = json.fStr;
+    if(typeof json.x != "undefined") x = json.x;
+    if(typeof json.dx != "undefined") dx = json.dx;
+    if(typeof json.vx != "undefined") vx = json.vx;
+    if(typeof json.ax != "undefined") ax = json.ax;
+    if(typeof json.y != "undefined") y = json.y;
+    if(typeof json.dy != "undefined") dy = json.dy;
+    if(typeof json.vy != "undefined") vy = json.vy;
+    if(typeof json.ay != "undefined") ay = json.ay;
+    if(typeof json.l != "undefined") l = json.l;
+    if(typeof json.kin != "undefined") kin = json.kin;
+  };
+
+  function _unserializePublic(json) { return _model.unserializePublic(json); }
+
+  _model._userUnserializePublic = function(json) {
+    _model._readParametersPublic(json);
+   _resetSolvers();
+   _model.update();
+  };
+
+  function _unserialize(json) { return _model.unserialize(json); }
+
+  _model._userUnserialize = function(json) {
+    _model._readParameters(json);
+   _resetSolvers();
+   _model.update();
+  };
+
+  _model.addToReset(function() {
+    __pagesEnabled["Init Page"] = true;
+    __pagesEnabled["Evol Page"] = true;
+    __pagesEnabled["FixRel Page"] = true;
+  });
+
+  _model.addToReset(function() {
+    n = 51; // EjsS Model.Variables.aux.n
+    l0 = 0.2; // EjsS Model.Variables.aux.l0
+    xmin = 0; // EjsS Model.Variables.aux.xmin
+    xmax = (n-1)*l0; // EjsS Model.Variables.aux.xmax
+    k = 1.0; // EjsS Model.Variables.aux.k
+    b = 0.0001; // EjsS Model.Variables.aux.b
+    amp = 1.5*l0; // EjsS Model.Variables.aux.amp
+    ymin = -3*l0; // EjsS Model.Variables.aux.ymin
+    ymax = 3*l0; // EjsS Model.Variables.aux.ymax
+    dt = 0.01; // EjsS Model.Variables.aux.dt
+    tol = 1.0e-7; // EjsS Model.Variables.aux.tol
+    t = 0; // EjsS Model.Variables.aux.t
+    tmax = 200; // EjsS Model.Variables.aux.tmax
+    index = 0; // EjsS Model.Variables.aux.index
+    xfixed = true; // EjsS Model.Variables.aux.xfixed
+    yfixed = false; // EjsS Model.Variables.aux.yfixed
+    sim = true; // EjsS Model.Variables.aux.sim
+    fixedend = true; // EjsS Model.Variables.aux.fixedend
+    inf = false; // EjsS Model.Variables.aux.inf
+    ninf = n+100; // EjsS Model.Variables.aux.ninf
+    nold = n; // EjsS Model.Variables.aux.nold
+    measure = false; // EjsS Model.Variables.aux.measure
+    pulse = false; // EjsS Model.Variables.aux.pulse
+    sendal = false; // EjsS Model.Variables.aux.sendal
+    inty0 = true; // EjsS Model.Variables.aux.inty0
+    fStr = "0.5*exp(-2*(x-5)^2)"; // EjsS Model.Variables.aux.fStr
+  });
+
+  _model.addToReset(function() {
+    x = new Array(n); // EjsS Model.Variables.osciladores.x
+    (function () {
+      var _i0;
+      for (_i0=0; _i0<n; _i0+=1) {  // EjsS Model.Variables.osciladores.x
+        x[_i0] = 0;  // EjsS Model.Variables.osciladores.x
+      }
+    }());
+    dx = new Array(n-1); // EjsS Model.Variables.osciladores.dx
+    (function () {
+      var _i0;
+      for (_i0=0; _i0<n-1; _i0+=1) {  // EjsS Model.Variables.osciladores.dx
+        dx[_i0] = l0;  // EjsS Model.Variables.osciladores.dx
+      }
+    }());
+    vx = new Array(n); // EjsS Model.Variables.osciladores.vx
+    (function () {
+      var _i0;
+      for (_i0=0; _i0<n; _i0+=1) {  // EjsS Model.Variables.osciladores.vx
+        vx[_i0] = 0;  // EjsS Model.Variables.osciladores.vx
+      }
+    }());
+    ax = new Array(n); // EjsS Model.Variables.osciladores.ax
+    (function () {
+      var _i0;
+      for (_i0=0; _i0<n; _i0+=1) {  // EjsS Model.Variables.osciladores.ax
+        ax[_i0] = 0;  // EjsS Model.Variables.osciladores.ax
+      }
+    }());
+    y = new Array(n); // EjsS Model.Variables.osciladores.y
+    (function () {
+      var _i0;
+      for (_i0=0; _i0<n; _i0+=1) {  // EjsS Model.Variables.osciladores.y
+        y[_i0] = 0;  // EjsS Model.Variables.osciladores.y
+      }
+    }());
+    dy = new Array(n-1); // EjsS Model.Variables.osciladores.dy
+    (function () {
+      var _i0;
+      for (_i0=0; _i0<n-1; _i0+=1) {  // EjsS Model.Variables.osciladores.dy
+        dy[_i0] = 0;  // EjsS Model.Variables.osciladores.dy
+      }
+    }());
+    vy = new Array(n); // EjsS Model.Variables.osciladores.vy
+    (function () {
+      var _i0;
+      for (_i0=0; _i0<n; _i0+=1) {  // EjsS Model.Variables.osciladores.vy
+        vy[_i0] = 0;  // EjsS Model.Variables.osciladores.vy
+      }
+    }());
+    ay = new Array(n); // EjsS Model.Variables.osciladores.ay
+    (function () {
+      var _i0;
+      for (_i0=0; _i0<n; _i0+=1) {  // EjsS Model.Variables.osciladores.ay
+        ay[_i0] = 0;  // EjsS Model.Variables.osciladores.ay
+      }
+    }());
+    l = new Array(n); // EjsS Model.Variables.osciladores.l
+    (function () {
+      var _i0;
+      for (_i0=0; _i0<n; _i0+=1) {  // EjsS Model.Variables.osciladores.l
+        l[_i0] = l0;  // EjsS Model.Variables.osciladores.l
+      }
+    }());
+    kin = new Array(n); // EjsS Model.Variables.osciladores.kin
+  });
+
+  if (_inputParameters) {
+    _inputParameters = _model.parseInputParameters(_inputParameters);
+    if (_inputParameters) _model.addToReset(function() { _model._readParameters(_inputParameters); });
+  }
+
+  _model.addToReset(function() {
+    _privateOdesList=[];
+    _ODEi_evolution1 = _ODE_evolution1();
+    _privateOdesList.push(_ODEi_evolution1);
+  });
+
+  _model.addToReset(function() {
+    _model.setAutoplay(false);
+    _model.setPauseOnPageExit(true);
+    _model.setFPS(100);
+    _model.setStepsPerDisplay(20);
+  });
+
+  function changeN () {  // > CustomCode.changeN:1
+    n=Math.max(n,3);  // > CustomCode.changeN:2
+    n=Math.min(n,201);  // > CustomCode.changeN:3
+    x= new Array(n);  // > CustomCode.changeN:4
+    y= new Array(n);  // > CustomCode.changeN:5
+    vx= new Array(n);  // > CustomCode.changeN:6
+    vy= new Array(n);  // > CustomCode.changeN:7
+    ax= new Array(n);  // > CustomCode.changeN:8
+    ay= new Array(n);  // > CustomCode.changeN:9
+    kin= new Array(n);  // > CustomCode.changeN:10
+    dy= new Array(n-1);  // > CustomCode.changeN:11
+    dx= new Array(n-1);  // > CustomCode.changeN:12
+    xmax = (n-1)*l0;  // > CustomCode.changeN:13
+    inf = false;  // > CustomCode.changeN:14
+    nold = n;  // > CustomCode.changeN:15
+    ninf =n + 100;  // > CustomCode.changeN:16
+    _initialize();  // > CustomCode.changeN:17
+  }  // > CustomCode.changeN:18
+
+  function changek() {  // > CustomCode.changeK:1
+    k=Math.min(k,2.5);  // > CustomCode.changeK:2
+    k=Math.max(k,0.5);  // > CustomCode.changeK:3
+    _initialize();  // > CustomCode.changeK:4
+  }  // > CustomCode.changeK:5
+
+  function noend () {  // > CustomCode.noend:1
+     // > CustomCode.noend:2
+    if(inf) {  // > CustomCode.noend:3
+       n = ninf;  // > CustomCode.noend:4
+    }else{  // > CustomCode.noend:5
+       n = nold;  // > CustomCode.noend:6
+    }  // > CustomCode.noend:7
+    x= new Array(n);  // > CustomCode.noend:8
+    y= new Array(n);  // > CustomCode.noend:9
+    vx= new Array(n);  // > CustomCode.noend:10
+    vy= new Array(n);  // > CustomCode.noend:11
+    ax= new Array(n)  // > CustomCode.noend:12
+    ay= new Array(n);  // > CustomCode.noend:13
+    kin= new Array(n);  // > CustomCode.noend:14
+    dy= new Array(n-1);  // > CustomCode.noend:15
+    dx= new Array(n-1);  // > CustomCode.noend:16
+    xmax = (nold-1)*l0;  // > CustomCode.noend:17
+    _initialize();  // > CustomCode.noend:18
+  }  // > CustomCode.noend:19
+
+  function fixaPontas(){  // > CustomCode.vinculos:1
+    //sempre  // > CustomCode.vinculos:2
+    y[0] = vy[0] = ay[0] = 0.0;  // > CustomCode.vinculos:3
+    x[0] = vx[0] = ax[0] = 0.0;  // > CustomCode.vinculos:4
+      // > CustomCode.vinculos:5
+    if (fixedend){  // > CustomCode.vinculos:6
+      y[n-1] = vy[n-1] = ay[n-1] = 0.0;  // > CustomCode.vinculos:7
+      x[n-1] = (n-1)*l0;  // > CustomCode.vinculos:8
+      vx[n-1] = ax[n-1] = 0.0;  // > CustomCode.vinculos:9
+    }  // > CustomCode.vinculos:10
+  }  // > CustomCode.vinculos:11
+  function pulsa(){  // > CustomCode.vinculos:12
+    if (pulse || sendal){  // > CustomCode.vinculos:13
+        var P = 20;  // > CustomCode.vinculos:14
+        var w = 2*3.14156/P;  // > CustomCode.vinculos:15
+        var tpulse = tmax;  // > CustomCode.vinculos:16
+        if (pulse) tpulse = 0.25*P;  // > CustomCode.vinculos:17
+          // > CustomCode.vinculos:18
+        if (t<tpulse){  // > CustomCode.vinculos:19
+          if (xfixed){  // > CustomCode.vinculos:20
+            y[1] = amp*Math.sin(w*t);  // > CustomCode.vinculos:21
+            vy[1]= amp*w*Math.cos(w*t);  // > CustomCode.vinculos:22
+            ay[1]= -amp*w*w*Math.sin(w*t);  // > CustomCode.vinculos:23
+          }  // > CustomCode.vinculos:24
+          if (yfixed){  // > CustomCode.vinculos:25
+            x[1] = l0 + amp*Math.sin(w*t);  // > CustomCode.vinculos:26
+            vx[1]= amp*w*Math.cos(w*t);  // > CustomCode.vinculos:27
+            ax[1]= -amp*w*w*Math.sin(w*t);  // > CustomCode.vinculos:28
+          }  // > CustomCode.vinculos:29
+        }              // > CustomCode.vinculos:30
+    }  // > CustomCode.vinculos:31
+  }  // > CustomCode.vinculos:32
+  function setaModo(){  // > CustomCode.vinculos:33
+    if (xfixed){  // > CustomCode.vinculos:34
+      for(var i=0; i<n; i++){  // > CustomCode.vinculos:35
+        x[i] = l0*i;  // > CustomCode.vinculos:36
+        vx[i] = 0.0;  // > CustomCode.vinculos:37
+        ax[i] = 0.0;  // > CustomCode.vinculos:38
+      }  // > CustomCode.vinculos:39
+    }else if (yfixed){  // > CustomCode.vinculos:40
+      for(var i=0; i<n; i++){  // > CustomCode.vinculos:41
+        y[i] = 0.0;  // > CustomCode.vinculos:42
+        vy[i] = 0.0;  // > CustomCode.vinculos:43
+        ay[i] = 0.0;  // > CustomCode.vinculos:44
+      }  // > CustomCode.vinculos:45
+    }  // > CustomCode.vinculos:46
+  }  // > CustomCode.vinculos:47
+  function vinculos () {  // > CustomCode.vinculos:48
+    //vinculos  // > CustomCode.vinculos:49
+    pulsa();  // > CustomCode.vinculos:50
+    setaModo();  // > CustomCode.vinculos:51
+    fixaPontas();  // > CustomCode.vinculos:52
+  }  // > CustomCode.vinculos:53
+
+  function eval_force () {  // > CustomCode.eval_force:1
+    //forcas, simplificado  // > CustomCode.eval_force:2
+    for(var i=0; i<n; i++){  // > CustomCode.eval_force:3
+      if (i<n-1){  // > CustomCode.eval_force:4
+          dx[i] = x[i+1]-x[i];  // > CustomCode.eval_force:5
+          dy[i] = y[i+1]-y[i];  // > CustomCode.eval_force:6
+        }  // > CustomCode.eval_force:7
+       if (i==0){  // > CustomCode.eval_force:8
+          ax[0] = k*dx[i] - b*vx[i];  // > CustomCode.eval_force:9
+          ay[0] = k*dy[i] - b*vy[i];  // > CustomCode.eval_force:10
+       }else if (i==n-1){  // > CustomCode.eval_force:11
+          ax[n-1] = -k*dx[i-1] - b*vx[i];  // > CustomCode.eval_force:12
+          ay[n-1] = -k*dy[i-1] - b*vy[i];  // > CustomCode.eval_force:13
+       }else{  // > CustomCode.eval_force:14
+          ax[i] = k*(dx[i]-dx[i-1]) - b*vx[i];  // > CustomCode.eval_force:15
+          ay[i] = k*(dy[i]-dy[i-1]) - b*vy[i];  // > CustomCode.eval_force:16
+       }  // > CustomCode.eval_force:17
+    }  // > CustomCode.eval_force:18
+  }  // > CustomCode.eval_force:19
+  function eval_force_2 (){  // > CustomCode.eval_force:20
+      // > CustomCode.eval_force:21
+    for(var i=0; i<n; i++){  // > CustomCode.eval_force:22
+        if(i<n-1){  // > CustomCode.eval_force:23
+            dx[i] = x[i+1]-x[i];  // > CustomCode.eval_force:24
+            dy[i] = y[i+1]-y[i];  // > CustomCode.eval_force:25
+            l[i] = Math.sqrt(dx[i]*dx[i] + dy[i]*dy[i]);  // > CustomCode.eval_force:26
+        }  // > CustomCode.eval_force:27
+        var f1 = k*(l0 - l[i-1])/l[i-1]; // i-1 em i  // > CustomCode.eval_force:28
+        var f2 = -k*(l0 - l[i])/l[i]; // i+1 em i  // > CustomCode.eval_force:29
+        if(i==0){// somente f2  // > CustomCode.eval_force:30
+            ax[i] = f2*dx[i] - b*vx[i];  // > CustomCode.eval_force:31
+            ay[i] = f2*dy[i] - b*vy[i];    // > CustomCode.eval_force:32
+        }else if(i==n-1){// somente f1  // > CustomCode.eval_force:33
+            ax[i] = f1*dx[i-1] - b*vx[i];  // > CustomCode.eval_force:34
+            ay[i] = f1*dy[i-1] - b*vy[i];  // > CustomCode.eval_force:35
+        }else{// internas  // > CustomCode.eval_force:36
+            ax[i] = f1*dx[i-1] + f2*dx[i] - b*vx[i];  // > CustomCode.eval_force:37
+            ay[i] = f1*dy[i-1] + f2*dy[i] - b*vy[i];  // > CustomCode.eval_force:38
+        }  // > CustomCode.eval_force:39
+    }  // > CustomCode.eval_force:40
+   }  // > CustomCode.eval_force:41
+
+  _model.addToInitialization(function() {
+    if (!__pagesEnabled["Init Page"]) return;
+    t = 0;  // > Initialization.Init Page:1
+    _view._update();  // > Initialization.Init Page:2
+    if (inty0){  // > Initialization.Init Page:3
+      sendal = false;  // > Initialization.Init Page:4
+      pulse = false;  // > Initialization.Init Page:5
+    }  // > Initialization.Init Page:6
+    for(var i=0; i<n; i++){  // > Initialization.Init Page:7
+      x[i] = i*l0;  // > Initialization.Init Page:8
+      dx[i] = l0;  // > Initialization.Init Page:9
+      vx[i] = 0.0;  // > Initialization.Init Page:10
+      ax[i] = 0.0;  // > Initialization.Init Page:11
+      y[i] = 0.0;  // > Initialization.Init Page:12
+      if (inty0) y[i] = _view.functionField.evaluate( {"x":x[i]} );  // > Initialization.Init Page:13
+      dy[i] = 0.0;  // > Initialization.Init Page:14
+      vy[i] = 0;  // > Initialization.Init Page:15
+      ay[i] = 0.0;  // > Initialization.Init Page:16
+    }  // > Initialization.Init Page:17
+  });
+
+  _model.addToInitialization(function() {
+    _initializeSolvers();
+  });
+
+  _model.addToEvolution(function() {
+    if (!__pagesEnabled["Evol Page"]) return;
+    _ODEi_evolution1.step();
+  });
+
+  _model.addToFixedRelations(function() { _isPaused = _model.isPaused(); _isPlaying = _model.isPlaying(); });
+
+  _model.addToFixedRelations(function() {
+    if (!__pagesEnabled["FixRel Page"]) return;
+    vinculos ();  // > FixedRelations.FixRel Page:1
+    for(var i=0; i<n-1; i++){  // > FixedRelations.FixRel Page:2
+      dx[i] = x[i+1]-x[i];  // > FixedRelations.FixRel Page:3
+      dy[i] = y[i+1]-y[i];  // > FixedRelations.FixRel Page:4
+      kin[i] = 0.5*(vx[i]*vx[i] +  vy[i]*vy[i]);  // > FixedRelations.FixRel Page:5
+    }  // > FixedRelations.FixRel Page:6
+    kin[n-1] = 0.5*(vx[n-1]*vx[n-1] +  vy[n-1]*vy[n-1]);  // > FixedRelations.FixRel Page:7
+    sim = kin[n-2] > 1.0e-3;  // > FixedRelations.FixRel Page:8
+    if(measure && sim) _pause();  // > FixedRelations.FixRel Page:9
+    if(inf && sim) _pause();  // > FixedRelations.FixRel Page:10
+    if (t>=tmax) _pause();  // > FixedRelations.FixRel Page:11
+  });
+
+  _model.addToFixedRelations(function() { _isPaused = _model.isPaused(); _isPlaying = _model.isPlaying(); });
+
+  function _initializeSolvers() {
+    for (var i=0,n=_privateOdesList.length; i<n; i++) _privateOdesList[i].initializeSolver();
+  }
+
+  function _automaticResetSolvers() {
+    for (var i=0,n=_privateOdesList.length; i<n; i++) _privateOdesList[i].automaticResetSolver();
+  }
+
+  _model.resetSolvers = function() {
+    for (var i=0,n=_privateOdesList.length; i<n; i++) _privateOdesList[i].resetSolver();
+  };
+
+  _getODE = function (_odeName) {
+    if (_odeName=="Evol Page") return _ODEi_evolution1;
+    return null;
+  }
+
+  function _getEventSolver(_odeName) {
+    var ode = _getODE(_odeName);
+    if (ode===null) return null;
+    return ode.getEventSolver();
+  }
+
+  function _setSolverClass(_odeName, _engine) {
+    var ode = _getODE(_odeName);
+    if (ode===null) return;
+    if (!_engine.setODE) {
+      var classname = _engine.toLowerCase();
+      if      (classname.indexOf("boga")>=0)   _engine = EJSS_ODE_SOLVERS.bogackiShampine23;
+      else if (classname.indexOf("cash")>=0)   _engine = EJSS_ODE_SOLVERS.cashKarp45;
+      else if (classname.indexOf("dopri5")>=0) _engine = EJSS_ODE_SOLVERS.dopri5;
+      else if (classname.indexOf("dopri8")>=0) _engine = EJSS_ODE_SOLVERS.dopri853;
+      else if (classname.indexOf("richa")>=0)  _engine = EJSS_ODE_SOLVERS.eulerRichardson;
+      else if (classname.indexOf("euler")>=0)  _engine = EJSS_ODE_SOLVERS.euler;
+      else if (classname.indexOf("fehlberg87")>=0) _engine = EJSS_ODE_SOLVERS.fehlberg87;
+      else if (classname.indexOf("fehlberg8")>=0)  _engine = EJSS_ODE_SOLVERS.fehlberg8;
+      else if (classname.indexOf("radau")>=0)   _engine = EJSS_ODE_SOLVERS.radau5;
+      else if (classname.indexOf("runge")>=0)  _engine = EJSS_ODE_SOLVERS.rungeKutta4;
+      else if (classname.indexOf("rk4")>=0)    _engine = EJSS_ODE_SOLVERS.rungeKutta4;
+      else if (classname.indexOf("verlet")>=0) _engine = EJSS_ODE_SOLVERS.velocityVerlet;
+    }
+    if (_engine) ode.setSolverClass(_engine);
+  }
+
+  function _ODE_evolution1() {
+    var __odeSelf = {};
+    var __eventSolver;
+    var __solverClass = EJSS_ODE_SOLVERS.rungeKutta4;
+    var __state=[];
+    var __ignoreErrors=false;
+    var __mustInitialize=true;
+    var __isEnabled=true;
+    var __mustUserReinitialize=false;
+    var __mustReinitialize=true;
+
+    var _xLength;
+    var _vxLength;
+    var _yLength;
+    var _vyLength;
+
+    __odeSelf._getOdeVars = function (){ return["x","vx","y","vy","t"]};
+
+    __odeSelf.setSolverClass = function(__aSolverClass) {
+      __solverClass = __aSolverClass;
+      __instantiateSolver();
+    };
+
+    function __instantiateSolver() {
+      __state=[];
+      _xLength = x.length;
+      _vxLength = vx.length;
+      _yLength = y.length;
+      _vyLength = vy.length;
+      __pushState();
+      __eventSolver = EJSS_ODE_SOLVERS.interpolatorEventSolver(__solverClass(),__odeSelf);
+      __mustInitialize = true;
+    }
+
+    __odeSelf.setEnabled = function(_enabled) { __isEnabled = _enabled; };
+
+    __odeSelf.getIndependentVariableValue = function() { return __eventSolver.getIndependentVariableValue(); };
+
+    __odeSelf.getInternalStepSize = function() { return __eventSolver.getInternalStepSize(); };
+
+    __odeSelf.isAccelerationIndependentOfVelocity = function() { return false; };
+
+    __odeSelf.initializeSolver = function() {
+      if (__arraysChanged()) { __instantiateSolver(); __odeSelf.initializeSolver(); return; }
+      __pushState();
+      __eventSolver.initialize(dt);
+      __eventSolver.setBestInterpolation(false);
+      __eventSolver.setMaximumInternalSteps(10000);
+      __eventSolver.removeAllEvents();
+      for(k in userEvents1){__eventSolver.addEvent(userEvents1[k]);}
+      __eventSolver.setEstimateFirstStep(false);
+      __eventSolver.setEnableExceptions(false);
+      __eventSolver.setTolerances(tol,tol);
+      __mustReinitialize = true;
+      __mustInitialize = false;
+    };
+
+    function __pushState() {
+      // Copy our variables to __state[] 
+        var __j=0;
+        var __n=0;
+        var __cIn=0;
+      if (!__mustReinitialize)
+        for (__j=0,__n=__cIn; __j<_xLength; __j++)
+          if (__state[__n++]!=x[__j] || __state[__n++]!=vx[__j]) { __mustReinitialize = true; break; }
+      for (__j=0; __j<_xLength; __j++) { // These two alternate in the state
+         __state[__cIn++] = x[__j];
+         __state[__cIn++] = vx[__j];
+      }
+      if (!__mustReinitialize)
+        for (__j=0,__n=__cIn; __j<_yLength; __j++)
+          if (__state[__n++]!=y[__j] || __state[__n++]!=vy[__j]) { __mustReinitialize = true; break; }
+      for (__j=0; __j<_yLength; __j++) { // These two alternate in the state
+         __state[__cIn++] = y[__j];
+         __state[__cIn++] = vy[__j];
+      }
+        if (__state[__cIn]!=t) __mustReinitialize = true;
+        __state[__cIn++] = t;
+    }
+
+    function __arraysChanged () {
+      if (_xLength != x.length) return true;
+      if (_vxLength != vx.length) return true;
+      if (_yLength != y.length) return true;
+      if (_vyLength != vy.length) return true;
+      return false;
+    }
+
+    __odeSelf.getEventSolver = function() {
+      return __eventSolver;
+    };
+
+    __odeSelf.resetSolver = function() {
+      __mustUserReinitialize = true;
+    };
+
+    __odeSelf.automaticResetSolver = function() {
+      __mustReinitialize = true;
+    };
+
+    function __errorAction () {
+      if (__ignoreErrors) return;
+      console.log (__eventSolver.getErrorMessage());
+      _pause();
+      // Make sure the solver is reinitialized;
+      __mustReinitialize = true;
+    }
+
+    __odeSelf.step = function() { return __privateStep(false); };
+
+    __odeSelf.solverStep = function() { return __privateStep(true); };
+
+    function __privateStep(__takeMaximumStep) {
+      if (!__isEnabled) return 0;
+      if (dt===0) return 0;
+      if (__mustInitialize) __odeSelf.initializeSolver();
+      if (__arraysChanged()) { __instantiateSolver(); __odeSelf.initializeSolver(); }
+      __eventSolver.setStepSize(dt);
+      __eventSolver.setInternalStepSize(dt);
+      __eventSolver.setMaximumInternalSteps(10000);
+      __eventSolver.setTolerances(tol,tol);
+      __pushState();
+      if (__mustUserReinitialize) { 
+        __eventSolver.userReinitialize();
+        __mustUserReinitialize = false;
+        __mustReinitialize = false;
+        if (__eventSolver.getErrorCode()!=EJSS_ODE_SOLVERS.ERROR.NO_ERROR) __errorAction();
+      }
+      else if (__mustReinitialize) { 
+        __eventSolver.reinitialize();
+        __mustReinitialize = false;
+        if (__eventSolver.getErrorCode()!=EJSS_ODE_SOLVERS.ERROR.NO_ERROR) __errorAction();
+      }
+      var __stepTaken = __takeMaximumStep ? __eventSolver.maxStep() : __eventSolver.step();
+      // Extract our variables from __state
+        var __i=0;
+        var __cOut=0;
+        for (__i=0; __i<_xLength; __i++) { // These two alternate in the state
+          x[__i] = __state[__cOut++];
+          vx[__i] = __state[__cOut++];
+        }
+        for (__i=0; __i<_yLength; __i++) { // These two alternate in the state
+          y[__i] = __state[__cOut++];
+          vy[__i] = __state[__cOut++];
+        }
+        t = __state[__cOut++];
+      // Check for error
+      if (__eventSolver.getErrorCode()!=EJSS_ODE_SOLVERS.ERROR.NO_ERROR) __errorAction();
+      return __stepTaken;
+    }
+
+    __odeSelf.getState = function() { return __state; };
+
+    __odeSelf.getRate = function(_aState,_aRate) {
+      _aRate[_aRate.length-1] = 0.0; // In case the prelim code returns
+      var __index=-1; // so that it can be used in preliminary code
+      // Extract our variables from _aState
+        var __i=0;
+        var __cOut=0;
+        var x = [];
+        var vx = [];
+        for (__i=0; __i<_xLength; __i++) { // These two alternate in the state
+          x[__i] = _aState[__cOut++];
+          vx[__i] = _aState[__cOut++];
+        }
+        var y = [];
+        var vy = [];
+        for (__i=0; __i<_yLength; __i++) { // These two alternate in the state
+          y[__i] = _aState[__cOut++];
+          vy[__i] = _aState[__cOut++];
+        }
+        var t = _aState[__cOut++];
+      // Preliminary code: Code to be executed before rate equations are evaluated
+        eval_force();  // > Preliminary code for ODE.Evol Page:1
+        vinculos ();  // > Preliminary code for ODE.Evol Page:2
+      // Compute the rate
+        var __cRate=0;
+        for (__i=0;__i<_xLength;__i++) { // These two alternate in the state
+          _aRate[__cRate++] = Array.isArray(vx[__i]) ? vx[__i][__i] : vx[__i]; // Rate for ODE: Evol Page:x
+          _aRate[__cRate++] = Array.isArray(ax[__i]) ? ax[__i][__i] : ax[__i]; // Rate for ODE: Evol Page:vx
+        }
+        for (__i=0;__i<_yLength;__i++) { // These two alternate in the state
+          _aRate[__cRate++] = Array.isArray(vy[__i]) ? vy[__i][__i] : vy[__i]; // Rate for ODE: Evol Page:y
+          _aRate[__cRate++] = Array.isArray(ay[__i]) ? ay[__i][__i] : ay[__i]; // Rate for ODE: Evol Page:vy
+        }
+        _aRate[__cRate++] = 1; // independent variable
+        return _aRate;
+    }; //end of getRate
+
+    __odeSelf._addEvent = function(userCondition,userAction,eventType,eventMethod,maxIter,eventTolerance,endAtEvent){
+    var User_Event = function (userCondition,userAction,eventType,eventMethod,maxIter,eventTolerance,endAtEvent) {
+      var _eventSelf = {};
+
+      _eventSelf.getTypeOfEvent = function() { return eventType; };
+
+      _eventSelf.getRootFindingMethod = function() { return eventMethod; };
+
+      _eventSelf.getMaxIterations = function() { return maxIter; };
+
+      _eventSelf.getTolerance = function() { return eventTolerance; };
+
+      _eventSelf.evaluate = function(_aState) { 
+      // Extract our variables from _aState
+        var __i=0;
+        var __cOut=0;
+        var x = [];
+        var vx = [];
+        for (__i=0; __i<_xLength; __i++) { // These two alternate in the state
+          x[__i] = _aState[__cOut++];
+          vx[__i] = _aState[__cOut++];
+        }
+        var y = [];
+        var vy = [];
+        for (__i=0; __i<_yLength; __i++) { // These two alternate in the state
+          y[__i] = _aState[__cOut++];
+          vy[__i] = _aState[__cOut++];
+        }
+        var t = _aState[__cOut++];
+      return eval(userCondition);
+      };
+
+      _eventSelf.action = function() { 
+      // Extract our variables from __state
+        var __i=0;
+        var __cOut=0;
+        for (__i=0; __i<_xLength; __i++) { // These two alternate in the state
+          x[__i] = __state[__cOut++];
+          vx[__i] = __state[__cOut++];
+        }
+        for (__i=0; __i<_yLength; __i++) { // These two alternate in the state
+          y[__i] = __state[__cOut++];
+          vy[__i] = __state[__cOut++];
+        }
+        t = __state[__cOut++];
+        var _returnValue = __userDefinedAction();
+      // Copy our variables to __state[] 
+        var __j=0;
+        var __n=0;
+        var __cIn=0;
+      for (__j=0; __j<_xLength; __j++) { // These two alternate in the state
+         __state[__cIn++] = x[__j];
+         __state[__cIn++] = vx[__j];
+      }
+      for (__j=0; __j<_yLength; __j++) { // These two alternate in the state
+         __state[__cIn++] = y[__j];
+         __state[__cIn++] = vy[__j];
+      }
+        __state[__cIn++] = t;
+        return _returnValue;
+      };
+
+      function __userDefinedAction() {
+        if (undefined != functions) eval(functions.toString());
+        eval(userAction);
+        return endAtEvent;
+      }
+
+      return _eventSelf;
+    }; // End of event
+
+   userEvents1.push(User_Event(userCondition,userAction,eventType,eventMethod,maxIter,eventTolerance,endAtEvent));
+   }
+
+    __instantiateSolver();
+
+    return __odeSelf;
+  }
+
+  function _historic_x(__time) {
+    var __beginIndex = 0;
+    return _ODEi_evolution1.getEventSolver().getStateHistory().interpolate(__time,new Array(x.length),__beginIndex,x.ength);
+  }
+
+  function _historic_vx(__time) {
+    var __beginIndex = 0 + x.length;
+    return _ODEi_evolution1.getEventSolver().getStateHistory().interpolate(__time,new Array(vx.length),__beginIndex,vx.ength);
+  }
+
+  function _historic_y(__time) {
+    var __beginIndex = 0 + x.length + vx.length;
+    return _ODEi_evolution1.getEventSolver().getStateHistory().interpolate(__time,new Array(y.length),__beginIndex,y.ength);
+  }
+
+  function _historic_vy(__time) {
+    var __beginIndex = 0 + x.length + vx.length + y.length;
+    return _ODEi_evolution1.getEventSolver().getStateHistory().interpolate(__time,new Array(vy.length),__beginIndex,vy.ength);
+  }
+
+    _model._fontResized = function(iBase,iSize,iDelta) {
+      _view._fontResized(iBase,iSize,iDelta);
+  }; // end of _fontResized
+
+  function _getViews() {
+    var _viewsInfo = [];
+    var _counter = 0;
+    _viewsInfo[_counter++] = { name : "Simulacao", width : 800, height : 600 };
+    return _viewsInfo;
+  } // end of _getViews
+
+  function _selectView(_viewNumber) {
+    _view = null;
+    _view = new ondas_molas_v3_View(_topFrame,_viewNumber,_libraryPath,_codebasePath);
+    var _view_super_reset = _view._reset;
+    _view._reset = function() {
+      _view_super_reset();
+      switch(_viewNumber) {
+        case -10 : break; // make Lint happy
+        default :
+        case 0:
+          _view.osciladores.linkProperty("MinimumX",  function() { return xmin; }, function(_v) { xmin = _v; } ); // Simulacao linking property 'MinimumX' for element 'osciladores'
+          _view.osciladores.linkProperty("MinimumY",  function() { return ymin; }, function(_v) { ymin = _v; } ); // Simulacao linking property 'MinimumY' for element 'osciladores'
+          _view.osciladores.linkProperty("Title",  function() { return "t="+ _view._format(t,"0.0"); } ); // Simulacao linking property 'Title' for element 'osciladores'
+          _view.osciladores.linkProperty("MaximumY",  function() { return ymax; }, function(_v) { ymax = _v; } ); // Simulacao linking property 'MaximumY' for element 'osciladores'
+          _view.osciladores.linkProperty("MaximumX",  function() { return xmax; }, function(_v) { xmax = _v; } ); // Simulacao linking property 'MaximumX' for element 'osciladores'
+          _view.text.linkProperty("X",  function() { return 0.5*xmax; } ); // Simulacao linking property 'X' for element 'text'
+          _view.text.linkProperty("Y",  function() { return 0.8*ymax; } ); // Simulacao linking property 'Y' for element 'text'
+          _view.text.linkProperty("Text",  function() { return "tf="+ _view._format(t,"0.0"); } ); // Simulacao linking property 'Text' for element 'text'
+          _view.text.linkProperty("Visibility",  function() { return (measure && sim); } ); // Simulacao linking property 'Visibility' for element 'text'
+          _view.segment.linkProperty("X",  function() { return (n-2)*l0; } ); // Simulacao linking property 'X' for element 'segment'
+          _view.segment.linkProperty("Y",  function() { return ymin; }, function(_v) { ymin = _v; } ); // Simulacao linking property 'Y' for element 'segment'
+          _view.segment.linkProperty("Visibility",  function() { return (measure && sim); } ); // Simulacao linking property 'Visibility' for element 'segment'
+          _view.segment.linkProperty("SizeY",  function() { return ymax-ymin; } ); // Simulacao linking property 'SizeY' for element 'segment'
+          _view.massas.linkProperty("NumberOfElements",  function() { return n; }, function(_v) { n = _v; } ); // Simulacao linking property 'NumberOfElements' for element 'massas'
+          _view.massas.linkProperty("SizeX",  function() { return 500/nold; } ); // Simulacao linking property 'SizeX' for element 'massas'
+          _view.massas.linkProperty("X",  function() { return x; }, function(_v) { x = _v; } ); // Simulacao linking property 'X' for element 'massas'
+          _view.massas.linkProperty("Y",  function() { return y; }, function(_v) { y = _v; } ); // Simulacao linking property 'Y' for element 'massas'
+          _view.massas.linkProperty("SizeY",  function() { return 500/nold; } ); // Simulacao linking property 'SizeY' for element 'massas'
+          _view.molas.linkProperty("NumberOfElements",  function() { return n-1; } ); // Simulacao linking property 'NumberOfElements' for element 'molas'
+          _view.molas.linkProperty("SizeX",  function() { return dx; }, function(_v) { dx = _v; } ); // Simulacao linking property 'SizeX' for element 'molas'
+          _view.molas.linkProperty("X",  function() { return x; }, function(_v) { x = _v; } ); // Simulacao linking property 'X' for element 'molas'
+          _view.molas.linkProperty("Y",  function() { return y; }, function(_v) { y = _v; } ); // Simulacao linking property 'Y' for element 'molas'
+          _view.molas.linkProperty("SizeY",  function() { return dy; }, function(_v) { dy = _v; } ); // Simulacao linking property 'SizeY' for element 'molas'
+          _view.twoStateButton.setAction("OffClick", _pause); // Simulacao setting action 'OffClick' for element 'twoStateButton'
+          _view.twoStateButton.linkProperty("State",  function() { return _isPaused; } ); // Simulacao linking property 'State' for element 'twoStateButton'
+          _view.twoStateButton.setAction("OnClick", _play); // Simulacao setting action 'OnClick' for element 'twoStateButton'
+          _view.stepButton.setAction("OnClick", function(_data,_info) {
+  _step();
+
+}); // Simulacao setting action 'OnClick' for element 'stepButton'
+          _view.reset.setAction("OnClick", _reset); // Simulacao setting action 'OnClick' for element 'reset'
+          _view.xfixed.linkProperty("Checked",  function() { return xfixed; }, function(_v) { xfixed = _v; } ); // Simulacao linking property 'Checked' for element 'xfixed'
+          _view.xfixed.setAction("OnChange", _initialize); // Simulacao setting action 'OnChange' for element 'xfixed'
+          _view.yfixed.linkProperty("Checked",  function() { return yfixed; }, function(_v) { yfixed = _v; } ); // Simulacao linking property 'Checked' for element 'yfixed'
+          _view.yfixed.setAction("OnChange", function(_data,_info) {
+  fixedend=true;
+  _initialize();
+
+}); // Simulacao setting action 'OnChange' for element 'yfixed'
+          _view.pulso.linkProperty("Checked",  function() { return pulse; }, function(_v) { pulse = _v; } ); // Simulacao linking property 'Checked' for element 'pulso'
+          _view.pulso.setAction("OnChange", function(_data,_info) {
+  if(pulse){
+    sendal=false;
+    inty0=false;
+  }
+  _initialize();
+
+}); // Simulacao setting action 'OnChange' for element 'pulso'
+          _view.senoidal.linkProperty("Checked",  function() { return sendal; }, function(_v) { sendal = _v; } ); // Simulacao linking property 'Checked' for element 'senoidal'
+          _view.senoidal.setAction("OnChange", function(_data,_info) {
+  if(sendal){
+    pulse=false;
+    inty0=false;
+  }
+  _initialize();
+
+}); // Simulacao setting action 'OnChange' for element 'senoidal'
+          _view.inty0.linkProperty("Checked",  function() { return inty0; }, function(_v) { inty0 = _v; } ); // Simulacao linking property 'Checked' for element 'inty0'
+          _view.inty0.setAction("OnCheckOff", function(_data,_info) {
+  ;
+
+}); // Simulacao setting action 'OnCheckOff' for element 'inty0'
+          _view.inty0.setAction("OnChange", function(_data,_info) {
+  if(inty0){
+    pulse=false;
+    sendal=false;
+  }
+  _initialize();
+
+}); // Simulacao setting action 'OnChange' for element 'inty0'
+          _view.inty0.setAction("OnCheckOn", function(_data,_info) {
+  ;
+
+}); // Simulacao setting action 'OnCheckOn' for element 'inty0'
+          _view.fixedend.linkProperty("Checked",  function() { return fixedend; }, function(_v) { fixedend = _v; } ); // Simulacao linking property 'Checked' for element 'fixedend'
+          _view.fixedend.setAction("OnChange", _initialize); // Simulacao setting action 'OnChange' for element 'fixedend'
+          _view.fixedend.linkProperty("Visibility",  function() { return !inf; } ); // Simulacao linking property 'Visibility' for element 'fixedend'
+          _view.measure.linkProperty("Checked",  function() { return measure; }, function(_v) { measure = _v; } ); // Simulacao linking property 'Checked' for element 'measure'
+          _view.measure.setAction("OnChange", _initialize); // Simulacao setting action 'OnChange' for element 'measure'
+          _view.measure.linkProperty("Visibility",  function() { return !inf; } ); // Simulacao linking property 'Visibility' for element 'measure'
+          _view.noend.linkProperty("Checked",  function() { return inf; }, function(_v) { inf = _v; } ); // Simulacao linking property 'Checked' for element 'noend'
+          _view.noend.setAction("OnChange", function(_data,_info) {
+  noend();
+
+}); // Simulacao setting action 'OnChange' for element 'noend'
+          _view.k.linkProperty("Value",  function() { return k; }, function(_v) { k = _v; } ); // Simulacao linking property 'Value' for element 'k'
+          _view.k.setAction("OnChange", changek); // Simulacao setting action 'OnChange' for element 'k'
+          _view.b.linkProperty("Value",  function() { return b; }, function(_v) { b = _v; } ); // Simulacao linking property 'Value' for element 'b'
+          _view.b.setAction("OnChange", _initialize); // Simulacao setting action 'OnChange' for element 'b'
+          _view.amp.linkProperty("Value",  function() { return amp; }, function(_v) { amp = _v; } ); // Simulacao linking property 'Value' for element 'amp'
+          _view.amp.setAction("OnChange", _initialize); // Simulacao setting action 'OnChange' for element 'amp'
+          _view.nField.linkProperty("Value",  function() { return n; }, function(_v) { n = _v; } ); // Simulacao linking property 'Value' for element 'nField'
+          _view.nField.setAction("OnChange", changeN); // Simulacao setting action 'OnChange' for element 'nField'
+          _view.nField.linkProperty("Visibility",  function() { return !inf; } ); // Simulacao linking property 'Visibility' for element 'nField'
+          _view.functionField.linkProperty("Value",  function() { return fStr; }, function(_v) { fStr = _v; } ); // Simulacao linking property 'Value' for element 'functionField'
+          _view.functionField.setAction("OnChange", _initialize); // Simulacao setting action 'OnChange' for element 'functionField'
+          _view.functionField.linkProperty("Visibility",  function() { return inty0; }, function(_v) { inty0 = _v; } ); // Simulacao linking property 'Visibility' for element 'functionField'
+          break;
+      } // end of switch
+    }; // end of new reset
+
+    _model.setView(_view);
+    _model.reset();
+    _view._enableEPub();
+  } // end of _selectView
+
+  _model.setAutoplay(false);
+  _model.setFPS(100);
+  _model.setStepsPerDisplay(20);
+  _selectView(_model._autoSelectView(_getViews())); // this includes _model.reset()
+  return _model;
+}
+
+function ondas_molas_v3_View (_topFrame,_viewNumber,_libraryPath,_codebasePath) {
+  var _view;
+  switch(_viewNumber) {
+    case -10 : break; // make Lint happy
+    default :
+    case 0: _view = ondas_molas_v3_View_0 (_topFrame); break;
+  } // end of switch
+
+  if (_codebasePath) _view._setResourcePath(_codebasePath);
+
+  if (_libraryPath) _view._setLibraryPath(_libraryPath);
+
+
+  return _view;
+} // end of main function
+
+function ondas_molas_v3_View_0 (_topFrame) {
+  var _view = EJSS_CORE.createView(_topFrame);
+
+  _view._reset = function() {
+    _view._clearAll();
+    _view._addElement(EJSS_INTERFACE.panel,"panel", _view._topFrame) // EJsS HtmlView.Simulacao: declaration of element 'panel'
+      .setProperty("CSS",{ "display" : "inline-block"}) // EJsS HtmlView.Simulacao: setting property 'CSS' for element 'panel'
+      ;
+
+    _view._addElement(EJSS_INTERFACE.panel,"simulacao", _view.panel) // EJsS HtmlView.Simulacao: declaration of element 'simulacao'
+      ;
+
+    _view._addElement(EJSS_DRAWING2D.plottingPanel,"osciladores", _view.simulacao) // EJsS HtmlView.Simulacao: declaration of element 'osciladores'
+      .setProperty("Width",1080) // EJsS HtmlView.Simulacao: setting property 'Width' for element 'osciladores'
+      .setProperty("AutoScaleY",false) // EJsS HtmlView.Simulacao: setting property 'AutoScaleY' for element 'osciladores'
+      .setProperty("AutoScaleX",false) // EJsS HtmlView.Simulacao: setting property 'AutoScaleX' for element 'osciladores'
+      ;
+
+    _view._addElement(EJSS_DRAWING2D.text,"text", _view.osciladores) // EJsS HtmlView.Simulacao: declaration of element 'text'
+      ;
+
+    _view._addElement(EJSS_DRAWING2D.segment,"segment", _view.osciladores) // EJsS HtmlView.Simulacao: declaration of element 'segment'
+      .setProperty("SizeX",0) // EJsS HtmlView.Simulacao: setting property 'SizeX' for element 'segment'
+      ;
+
+    _view._addElement(EJSS_DRAWING2D.shapeSet,"massas", _view.osciladores) // EJsS HtmlView.Simulacao: declaration of element 'massas'
+      .setProperty("Sensitivity",8) // EJsS HtmlView.Simulacao: setting property 'Sensitivity' for element 'massas'
+      .setProperty("FillColor","rgba(200,0,0,0.7)") // EJsS HtmlView.Simulacao: setting property 'FillColor' for element 'massas'
+      .setProperty("PixelSize",true) // EJsS HtmlView.Simulacao: setting property 'PixelSize' for element 'massas'
+      .setProperty("EnabledPosition","ENABLED_Y") // EJsS HtmlView.Simulacao: setting property 'EnabledPosition' for element 'massas'
+      ;
+
+    _view._addElement(EJSS_DRAWING2D.springSet,"molas", _view.osciladores) // EJsS HtmlView.Simulacao: declaration of element 'molas'
+      ;
+
+    _view._addElement(EJSS_INTERFACE.panel,"controles", _view._topFrame) // EJsS HtmlView.Simulacao: declaration of element 'controles'
+      .setProperty("Width",550) // EJsS HtmlView.Simulacao: setting property 'Width' for element 'controles'
+      ;
+
+    _view._addElement(EJSS_INTERFACE.panel,"botoes", _view.controles) // EJsS HtmlView.Simulacao: declaration of element 'botoes'
+      .setProperty("Width",800) // EJsS HtmlView.Simulacao: setting property 'Width' for element 'botoes'
+      ;
+
+    _view._addElement(EJSS_INTERFACE.twoStateButton,"twoStateButton", _view.botoes) // EJsS HtmlView.Simulacao: declaration of element 'twoStateButton'
+      .setProperty("TextOn","") // EJsS HtmlView.Simulacao: setting property 'TextOn' for element 'twoStateButton'
+      .setProperty("ImageOnUrl","/org/opensourcephysics/resources/controls/images/play.gif") // EJsS HtmlView.Simulacao: setting property 'ImageOnUrl' for element 'twoStateButton'
+      .setProperty("ImageOffUrl","/org/opensourcephysics/resources/controls/images/pause.gif") // EJsS HtmlView.Simulacao: setting property 'ImageOffUrl' for element 'twoStateButton'
+      ;
+
+    _view._addElement(EJSS_INTERFACE.button,"stepButton", _view.botoes) // EJsS HtmlView.Simulacao: declaration of element 'stepButton'
+      .setProperty("ImageUrl","/org/opensourcephysics/resources/controls/images/stepforward.gif") // EJsS HtmlView.Simulacao: setting property 'ImageUrl' for element 'stepButton'
+      ;
+
+    _view._addElement(EJSS_INTERFACE.button,"reset", _view.botoes) // EJsS HtmlView.Simulacao: declaration of element 'reset'
+      .setProperty("ImageUrl","/org/opensourcephysics/resources/controls/images/reset.gif") // EJsS HtmlView.Simulacao: setting property 'ImageUrl' for element 'reset'
+      ;
+
+    _view._addElement(EJSS_INTERFACE.panel,"flags", _view.controles) // EJsS HtmlView.Simulacao: declaration of element 'flags'
+      .setProperty("Width",800) // EJsS HtmlView.Simulacao: setting property 'Width' for element 'flags'
+      ;
+
+    _view._addElement(EJSS_INTERFACE.panel,"xy", _view.flags) // EJsS HtmlView.Simulacao: declaration of element 'xy'
+      ;
+
+    _view._addElement(EJSS_INTERFACE.radioButton,"xfixed", _view.xy) // EJsS HtmlView.Simulacao: declaration of element 'xfixed'
+      .setProperty("Text","transversal") // EJsS HtmlView.Simulacao: setting property 'Text' for element 'xfixed'
+      ;
+
+    _view._addElement(EJSS_INTERFACE.radioButton,"yfixed", _view.xy) // EJsS HtmlView.Simulacao: declaration of element 'yfixed'
+      .setProperty("Text","longitudinal") // EJsS HtmlView.Simulacao: setting property 'Text' for element 'yfixed'
+      ;
+
+    _view._addElement(EJSS_INTERFACE.panel,"ps", _view.flags) // EJsS HtmlView.Simulacao: declaration of element 'ps'
+      ;
+
+    _view._addElement(EJSS_INTERFACE.radioButton,"pulso", _view.ps) // EJsS HtmlView.Simulacao: declaration of element 'pulso'
+      .setProperty("Text","pulso") // EJsS HtmlView.Simulacao: setting property 'Text' for element 'pulso'
+      ;
+
+    _view._addElement(EJSS_INTERFACE.radioButton,"senoidal", _view.ps) // EJsS HtmlView.Simulacao: declaration of element 'senoidal'
+      .setProperty("Text","senoidal") // EJsS HtmlView.Simulacao: setting property 'Text' for element 'senoidal'
+      ;
+
+    _view._addElement(EJSS_INTERFACE.radioButton,"inty0", _view.ps) // EJsS HtmlView.Simulacao: declaration of element 'inty0'
+      .setProperty("Text","seta y(x,0)") // EJsS HtmlView.Simulacao: setting property 'Text' for element 'inty0'
+      ;
+
+    _view._addElement(EJSS_INTERFACE.checkBox,"fixedend", _view.flags) // EJsS HtmlView.Simulacao: declaration of element 'fixedend'
+      .setProperty("Text","fixa extermidade") // EJsS HtmlView.Simulacao: setting property 'Text' for element 'fixedend'
+      ;
+
+    _view._addElement(EJSS_INTERFACE.checkBox,"measure", _view.flags) // EJsS HtmlView.Simulacao: declaration of element 'measure'
+      .setProperty("Text","mede v") // EJsS HtmlView.Simulacao: setting property 'Text' for element 'measure'
+      ;
+
+    _view._addElement(EJSS_INTERFACE.checkBox,"noend", _view.flags) // EJsS HtmlView.Simulacao: declaration of element 'noend'
+      .setProperty("Text","sem fim") // EJsS HtmlView.Simulacao: setting property 'Text' for element 'noend'
+      ;
+
+    _view._addElement(EJSS_INTERFACE.panel,"parametros", _view.controles) // EJsS HtmlView.Simulacao: declaration of element 'parametros'
+      .setProperty("Width",800) // EJsS HtmlView.Simulacao: setting property 'Width' for element 'parametros'
+      ;
+
+    _view._addElement(EJSS_INTERFACE.imageAndTextButton,"kl", _view.parametros) // EJsS HtmlView.Simulacao: declaration of element 'kl'
+      .setProperty("Text","k=") // EJsS HtmlView.Simulacao: setting property 'Text' for element 'kl'
+      ;
+
+    _view._addElement(EJSS_INTERFACE.numberField,"k", _view.parametros) // EJsS HtmlView.Simulacao: declaration of element 'k'
+      .setProperty("Width",50) // EJsS HtmlView.Simulacao: setting property 'Width' for element 'k'
+      .setProperty("Format","0.0") // EJsS HtmlView.Simulacao: setting property 'Format' for element 'k'
+      .setProperty("Editable",true) // EJsS HtmlView.Simulacao: setting property 'Editable' for element 'k'
+      ;
+
+    _view._addElement(EJSS_INTERFACE.imageAndTextButton,"bl", _view.parametros) // EJsS HtmlView.Simulacao: declaration of element 'bl'
+      .setProperty("Text","b=") // EJsS HtmlView.Simulacao: setting property 'Text' for element 'bl'
+      ;
+
+    _view._addElement(EJSS_INTERFACE.numberField,"b", _view.parametros) // EJsS HtmlView.Simulacao: declaration of element 'b'
+      .setProperty("Width",50) // EJsS HtmlView.Simulacao: setting property 'Width' for element 'b'
+      .setProperty("Format","0.000") // EJsS HtmlView.Simulacao: setting property 'Format' for element 'b'
+      .setProperty("Editable",true) // EJsS HtmlView.Simulacao: setting property 'Editable' for element 'b'
+      ;
+
+    _view._addElement(EJSS_INTERFACE.imageAndTextButton,"ampl", _view.parametros) // EJsS HtmlView.Simulacao: declaration of element 'ampl'
+      .setProperty("Text","amp=") // EJsS HtmlView.Simulacao: setting property 'Text' for element 'ampl'
+      ;
+
+    _view._addElement(EJSS_INTERFACE.numberField,"amp", _view.parametros) // EJsS HtmlView.Simulacao: declaration of element 'amp'
+      .setProperty("Width",50) // EJsS HtmlView.Simulacao: setting property 'Width' for element 'amp'
+      .setProperty("Format","0.0") // EJsS HtmlView.Simulacao: setting property 'Format' for element 'amp'
+      ;
+
+    _view._addElement(EJSS_INTERFACE.numberField,"nField", _view.parametros) // EJsS HtmlView.Simulacao: declaration of element 'nField'
+      .setProperty("Width",50) // EJsS HtmlView.Simulacao: setting property 'Width' for element 'nField'
+      .setProperty("Format","0") // EJsS HtmlView.Simulacao: setting property 'Format' for element 'nField'
+      ;
+
+    _view._addElement(EJSS_INTERFACE.panel,"panel2", _view.controles) // EJsS HtmlView.Simulacao: declaration of element 'panel2'
+      .setProperty("Width",800) // EJsS HtmlView.Simulacao: setting property 'Width' for element 'panel2'
+      ;
+
+    _view._addElement(EJSS_INTERFACE.imageAndTextButton,"flabel", _view.panel2) // EJsS HtmlView.Simulacao: declaration of element 'flabel'
+      .setProperty("Text","y(x,t=0) =") // EJsS HtmlView.Simulacao: setting property 'Text' for element 'flabel'
+      ;
+
+    _view._addElement(EJSS_INTERFACE.functionField,"functionField", _view.panel2) // EJsS HtmlView.Simulacao: declaration of element 'functionField'
+      .setProperty("Width",250) // EJsS HtmlView.Simulacao: setting property 'Width' for element 'functionField'
+      ;
+
+  };
+
+  return _view;
+}
+
+
+//--><!]]></script>
+  </head>
+  <body>
+    <div role="button" id="_topFrame" style="text-align:center"></div>
+  <div id="metadata" class="metadata">
+    <br />
+    <div id="title_author">
+      <hr />
+      <b>Title and author:</b>
+      <p>
+      Ondas transversal e logitudinal<br />
+      </p>
+      <p>
+      <img alt="author image" src="HAC_logo.png" />
+ Humberto Carmona
+      </p>
+    </div>
+    <hr />
+    <p></p>
+    <div id="copyright_message">
+      <div class="cc_left"  style="float:left">&#169; 2021, Humberto Carmona. Compiled with EJS 6.01 (201013)
+</div>
+      <div class="cc_right" style="float:right">    Released under a <a rel="license" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en_US"> <img alt="Creative Commons Attribution-NonCommercial-ShareAlike" src="library/images/cc_icon.png" /> </a> license.</div>
+    </div>
+  </div>
+    <script type="text/javascript"><!--//--><![CDATA[//><!--
+      var _model;
+      var _scorm;
+      window.addEventListener('load',
+        function () { 
+          _model =  new ondas_molas_v3("_topFrame","library/",null);
+          if (typeof _isApp !== "undefined" && _isApp) _model.setRunAlways(true);
+          TextResizeDetector.TARGET_ELEMENT_ID = '_topFrame';
+          TextResizeDetector.USER_INIT_FUNC = function () {
+            var iBase = TextResizeDetector.addEventListener(function(e,args) {
+              _model._fontResized(args[0].iBase,args[0].iSize,args[0].iDelta);
+              },null);
+            _model._fontResized(iBase);
+          };
+          _model.onload();
+        }, false);
+    //--><!]]></script>
+  </body>
+</html>
